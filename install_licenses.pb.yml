@@ -1,0 +1,30 @@
+---
+
+- name: add license
+  hosts: all
+  gather_facts: no
+  connection: local
+  roles:
+    - Juniper.junos
+  tasks:
+    - name: Install License
+      juniper_junos_rpc:
+        host: "{{ ansible_host }}"
+        user: "{{ ansible_user }}"
+        passwd: "{{ ansible_pass }}"
+        port: "{{ netconf_port }}"
+        rpc: "request-license-add"
+        kwargs:
+          key_data: "{{ item }}"
+      with_items: "{{ license_keys }}"
+      register: result
+      loop_control:
+        label: "{{ item.split()[0] }}"
+
+    - debug:
+        msg: "{{ item['parsed_output']['add-license-results']['add-individual-result']['message'] }}"
+      failed_when: "'error' in item['parsed_output']['add-license-results']['add-individual-result']['operation-status']"
+      changed_when: "'success' in item['parsed_output']['add-license-results']['add-individual-result']['operation-status']"
+      with_items: "{{ result['results'] }}"
+      loop_control:
+        label: "{{ item['parsed_output']['add-license-results']['add-individual-result']['name'] }}"

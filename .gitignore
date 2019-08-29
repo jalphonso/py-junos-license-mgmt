@@ -1,0 +1,13 @@
+inventory/
+licenses/
+__pycache__/
+.venv
+venv
+*.retry
+*.bak
+*.swp
+*.pyc
+*.vscode
+ansible.cfg
+setup.cfg
+requirements-dev.txt

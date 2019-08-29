@@ -1,0 +1,10 @@
+ansible
+colorama
+junos-eznc
+jxmlease
+lxml
+ncclient
+netaddr
+pyfiglet
+retrying
+ruamel.yaml
