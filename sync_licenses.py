@@ -134,7 +134,8 @@ def main():
           key_data = ' '.join(key_data.split('\n'))
           key_data = ' '.join(key_data.split())
           if key_data not in licenses['license_keys']:
-            print(f"{Fore.MAGENTA}Found unmanaged license key on device {hostname}. Saving...{Style.RESET_ALL}")
+            key_name = key_data.split(' ')[0]
+            print(f"{Fore.MAGENTA}Found unmanaged license key {key_name} on device {hostname}. Saving...{Style.RESET_ALL}")
             licenses['license_keys'].append(key_data)
 
       new_license_paths = Path("licenses/").glob(f"{serial}*.txt")
