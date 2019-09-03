@@ -5,6 +5,5 @@ jxmlease
 lxml
 ncclient
 netaddr
-pyfiglet
 retrying
 ruamel.yaml
