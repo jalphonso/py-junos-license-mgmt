@@ -101,6 +101,7 @@ def main():
       if not host_path.exists():
         print(f"Creating host_vars directory for host {hostname}")
         host_path.mkdir()
+        host_path.chmod(0o770)
         old_yml_path = Path(f'{datacenter}/host_vars/{hostname}.yml')
         new_yml_path = Path(f'{datacenter}/host_vars/{hostname}/system.yml')
         if old_yml_path.exists():
@@ -114,6 +115,8 @@ def main():
       else:
         print(f"initializing license.yml for host {hostname}")
         licenses = {}
+        license_path.touch() # mode in touch does not set correctly. could be a umask issue
+        license_path.chmod(0o660) # mode works with chmod as expected.
 
       if 'license_keys' not in licenses:
         licenses['license_keys'] = []
