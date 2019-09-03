@@ -1,5 +1,6 @@
 import argparse
 import ruamel.yaml
+import re
 import sys
 from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
@@ -88,10 +89,32 @@ def main():
   loader = DataLoader()
   inventory = InventoryManager(loader=loader, sources=datacenter)
   variables = VariableManager(loader=loader, inventory=inventory)
+
+  if limit:
+    if "*" in limit:
+      limit = limit.replace("*", ".*")
+    if "?" in limit:
+      limit = limit.replace("?", ".")
+    if ":" in limit:
+      limit = limit.replace(":", "-")
+
   for host in inventory.get_hosts():
     hostname = host.get_name()
+    match = False
+    if limit:
+      if re.match(limit, hostname):
+        match = True
+      else:
+        for group in (str(g) for g in host.get_groups()):
+          if re.match(limit, group):
+            match = True
+      if not match:
+        continue
     netconf_port = variables.get_vars(host=host)['netconf_port']
-    ansible_host = variables.get_vars(host=host)['ansible_host']
+    try:
+      ansible_host = variables.get_vars(host=host)['ansible_host']
+    except:
+      ansible_host = hostname
 
     # Begin Device Output to User
     print(f"{Fore.BLUE}{Style.BRIGHT}Checking existing host_vars structure for device {hostname}{Style.RESET_ALL}")
