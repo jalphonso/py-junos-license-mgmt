@@ -132,17 +132,21 @@ def main():
 
           old_yml_path.rename(new_yml_path)
 
+      licenses = None
       if license_path.exists():
         print(f"loading license.yml for host {hostname}")
         licenses = yaml.load(license_path)
       else:
         print(f"initializing license.yml for host {hostname}")
+        license_path.touch()  # mode in touch does not set correctly. could be a umask issue
+        license_path.chmod(0o660)  # mode works with chmod as expected.
+
+      if licenses == None:
         licenses = {}
-        license_path.touch() # mode in touch does not set correctly. could be a umask issue
-        license_path.chmod(0o660) # mode works with chmod as expected.
 
       if 'license_keys' not in licenses:
         licenses['license_keys'] = []
+        yaml.dump(licenses, license_path)
 
       # Saving a copy for comparison later to see if we need to write updates to the yml
       original_licenses_in_yml = licenses['license_keys'].copy()
