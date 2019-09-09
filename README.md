@@ -14,6 +14,10 @@ it up and sync all licenses for a given serialnumber. i.e. For S/N:X12345 Licens
 could be X12345-feature1.txt and X12345-feature2.txt
 Otherwise just name it X12345.txt which is just the serialnumber with a .txt extension
 
+The other important task the Python script does is it creates a consolidated view of
+unlicensed and licensed devices and includes the hostname and serial of the devices. The file
+is saved per datacenter. i.e. [dc1-license_status.yml](dc1-license_status.yml)
+
 The Ansible part of the project will install all available licenses as needed to the device.
 
 ## Example Usage and Output
