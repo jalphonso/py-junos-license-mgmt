@@ -73,6 +73,10 @@ def main():
   else:
     datacenter = args.inventory_path
   # Ensure inventory path exists. Safeguard mainly when user provides path via cmd line
+
+  # extract the datacenter name from the path
+  dc_name = datacenter.split('/')[-1]
+
   if not Path(datacenter).exists():
     print(f"Inventory Path '{datacenter}' does not exist. quitting...")
     sys.exit(1)
@@ -97,6 +101,15 @@ def main():
       limit = limit.replace("?", ".")
     if ":" in limit:
       limit = limit.replace(":", "-")
+
+  license_status_path = Path(f'{dc_name}-license_status.yml')
+  if not license_status_path.exists():
+    license_status_path.touch()
+    license_status_path.chmod(0o660)
+    license_status = {'licensed': {}, 'unlicensed': {}}
+    yaml.dump(license_status, license_status_path)
+  else:
+    license_status = yaml.load(license_status_path)
 
   for host in inventory.get_hosts():
     hostname = host.get_name()
@@ -155,6 +168,7 @@ def main():
       with Device(host=ansible_host, port=netconf_port, user=user, passwd=passwd, ssh_config=ssh_config,
                   auto_probe=5) as dev:
         serial = dev.facts['serialnumber']
+        model = dev.facts['model']
         hostname = dev.facts['hostname']
         print(f"device {hostname} has serialnumber {serial}")
         license_keys = dev.rpc.get_license_key_information()
@@ -182,6 +196,27 @@ def main():
         yaml.dump(licenses, license_path)
       else:
         print(f"{Fore.GREEN}Licenses already in sync for host {hostname}{Style.RESET_ALL}")
+
+      # Track what devices are licensed by datacenter
+      if licenses['license_keys'] == []:
+        try:
+          del license_status['licensed'][model][hostname]
+        except KeyError:
+          pass
+        if model not in license_status['unlicensed'].keys():
+          license_status['unlicensed'][model] = {}
+        if hostname not in license_status['unlicensed'][model].keys():
+          license_status['unlicensed'][model][hostname] = serial
+      else:
+        try:
+          del license_status['unlicensed'][model][hostname]
+        except KeyError:
+          pass
+        if model not in license_status['licensed'].keys():
+          license_status['licensed'][model] = {}
+        if hostname not in license_status['licensed'][model].keys():
+          license_status['licensed'][model][hostname] = serial
+
     except ConnectAuthError as err:
       print("Unable to login. Check username/password")
       print("Exiting so you don't lock yourself out :)")
@@ -192,6 +227,13 @@ def main():
     except Exception as err:
       print(err.__class__.__name__ + ": " + err.message)
       sys.exit(1)
+  for k, v in license_status['licensed'].items():
+    if v == {}:
+      del license_status['licensed'][k]
+  for k, v in license_status['unlicensed'].items():
+    if v == {}:
+      del license_status['unlicensed'][k]
+  yaml.dump(license_status, license_status_path)
   print(f"{Fore.YELLOW}License Sync Complete!{Style.RESET_ALL}")
 
 
