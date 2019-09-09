@@ -7,12 +7,9 @@ from ansible.inventory.manager import InventoryManager
 from ansible.vars.manager import VariableManager
 from colorama import Fore, Style
 from validate import validate_bool, validate_password, validate_choice, validate_str, validate_int
-from lxml import etree
 from jnpr.junos import Device
 from jnpr.junos.exception import ConnectError, ProbeError, ConnectAuthError
 from jnpr.junos.utils.scp import SCP
-from os import listdir
-from os.path import isfile, join
 from pathlib import Path
 
 yaml = ruamel.yaml.YAML()
