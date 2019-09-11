@@ -225,7 +225,7 @@ def main():
       print("Cannot connect to device: \nMake sure device is reachable and "
             "'set system services netconf ssh' is set")
     except Exception as err:
-      print(err.__class__.__name__ + ": " + err.message)
+      print(err.__class__.__name__ + ": " + err)
       sys.exit(1)
 
   # Remove empty subkeys (Model numbers with no entries)
