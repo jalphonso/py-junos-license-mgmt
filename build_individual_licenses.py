@@ -41,7 +41,8 @@ with input_file.open() as f:
       continue
 
     if license_id in existing_license_ids.keys():
-      print(f"{Fore.RED}{license_id} license exists in multiple files. Check to see if one of the devices was RMA'd and remove the old file.")
+      print(f"{Fore.RED}{license_id} license exists in multiple files. "
+            "Check to see if one of the devices was RMA'd and remove the old file.")
       print(f"existing file: {existing_license_ids[license_id]}\nnew file: {license_file.name}{Style.RESET_ALL}")
       continue
     else:
@@ -49,7 +50,8 @@ with input_file.open() as f:
 
     qty = serials[serial]
     if qty > 1:
-      print(f"{Fore.YELLOW}serial {serial} has {qty} key(s). Appending a suffix of -{qty} to this one.{Style.RESET_ALL}")
+      print(f"{Fore.YELLOW}serial {serial} has {qty} key(s). "
+            "Appending a suffix of -{qty} to this one.{Style.RESET_ALL}")
     print(f"{Fore.GREEN}Writing new license with id {license_id} to file {license_file.name}{Style.RESET_ALL}")
     license_file.write_text(license_key)
     # print(serial.strip())
