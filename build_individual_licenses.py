@@ -53,6 +53,8 @@ with input_file.open() as f:
       print(f"{Fore.YELLOW}serial {serial} has {qty} key(s). "
             "Appending a suffix of -{qty} to this one.{Style.RESET_ALL}")
     print(f"{Fore.GREEN}Writing new license with id {license_id} to file {license_file.name}{Style.RESET_ALL}")
+    license_file.touch()
+    license_file.chmod(0o660)
     license_file.write_text(license_key)
     # print(serial.strip())
     # print(license_key.strip())
