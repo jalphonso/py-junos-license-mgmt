@@ -72,7 +72,7 @@ def main():
   # Ensure inventory path exists. Safeguard mainly when user provides path via cmd line
 
   # extract the datacenter name from the path
-  dc_name = datacenter.split('/')[-1]
+  dc_name = datacenter.rstrip('/').split('/')[-1]
 
   if not Path(datacenter).exists():
     print(f"Inventory Path '{datacenter}' does not exist. quitting...")
