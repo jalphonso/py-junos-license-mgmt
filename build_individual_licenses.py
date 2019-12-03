@@ -10,9 +10,10 @@ yaml.explicit_start = True
 # Gather existing license ids from directory
 existing_license_ids = {}
 for f in Path("licenses/").iterdir():
+  if 'consolidated' in f.name or '.txt' not in f.name:
+    continue
   license_id = f.read_text().split(' ')[0]
   existing_license_ids[license_id] = f.name
-
 
 input_file = Path('licenses/consolidated.txt')
 count = 0
