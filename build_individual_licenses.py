@@ -52,7 +52,7 @@ with input_file.open() as f:
     qty = serials[serial]
     if qty > 1:
       print(f"{Fore.YELLOW}serial {serial} has {qty} key(s). "
-            "Appending a suffix of -{qty} to this one.{Style.RESET_ALL}")
+            f"Appending a suffix of -{qty} to this one.{Style.RESET_ALL}")
     print(f"{Fore.GREEN}Writing new license with id {license_id} to file {license_file.name}{Style.RESET_ALL}")
     license_file.touch()
     license_file.chmod(0o660)

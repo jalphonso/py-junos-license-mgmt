@@ -177,7 +177,7 @@ def main():
           if key_data not in licenses['license_keys']:
             key_name = key_data.split(' ')[0]
             print(f"{Fore.MAGENTA}Found unmanaged license key {key_name} on device {hostname}. "
-                  "Saving...{Style.RESET_ALL}")
+                  f"Saving...{Style.RESET_ALL}")
             licenses['license_keys'].append(key_data)
 
       new_license_paths = Path("licenses/").glob(f"{serial}*.txt")
@@ -192,7 +192,7 @@ def main():
         if new_license not in licenses['license_keys']:
           key_name = new_license.split(' ')[0]
           print(f"{Fore.MAGENTA}Found new license key {key_name} in file '{new_license_path}' "
-                "for device {hostname}. Converting...{Style.RESET_ALL}")
+                f"for device {hostname}. Converting...{Style.RESET_ALL}")
           licenses['license_keys'].append(new_license)
       if licenses['license_keys'] != original_licenses_in_yml:
         print(f"Updating licenses.yml for host {hostname}...")
