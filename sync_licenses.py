@@ -232,10 +232,11 @@ def main():
       sys.exit(1)
 
   # Remove empty subkeys (Model numbers with no entries)
-  for k, v in license_status['licensed'].items():
+  license_status_copy = license_status.copy()
+  for k, v in license_status_copy['licensed'].items():
     if v == {}:
       del license_status['licensed'][k]
-  for k, v in license_status['unlicensed'].items():
+  for k, v in license_status_copy['unlicensed'].items():
     if v == {}:
       del license_status['unlicensed'][k]
   yaml.dump(license_status, license_status_path)
