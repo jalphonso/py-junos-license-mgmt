@@ -1,4 +1,5 @@
 import argparse
+import copy
 import ruamel.yaml
 import re
 import sys
@@ -232,7 +233,7 @@ def main():
       sys.exit(1)
 
   # Remove empty subkeys (Model numbers with no entries)
-  license_status_copy = license_status.copy()
+  license_status_copy = copy.deepcopy(license_status)
   for k, v in license_status_copy['licensed'].items():
     if v == {}:
       del license_status['licensed'][k]
